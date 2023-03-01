@@ -1,0 +1,11 @@
+Required Libraries:
+  I2Cdev.h - Arduino library downloadable through the Arduino IDE Library manager
+  Wire.h - https://github.com/espressif/arduino-esp32/tree/master/libraries/Wire
+  Arduino.h - Arduino library downloadable through the Arduino IDE Library manager
+  BluetoothSerial.h - https://github.com/espressif/arduino-esp32/tree/master/libraries/BluetoothSerial
+  MPU6050_6axis_MotionApps20.h - https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/MPU6050
+  
+Please download these files and their associated source files and place them in the arduino library folder
+  - this is commonly ~/Documents/Arduino/libraries on Windows machines
+  
+  

@@ -1,2 +1,2 @@
-# robotics_project
-Repo for Robotics software project
+# robotics\_project
+Repo for CSC/ECE 591 Robotics software project

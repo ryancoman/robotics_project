@@ -7,7 +7,7 @@
  * v1.00: First release.
  */
 
-#include "serialstream.h"
+#include "imu_publisher/serialstream.h"
 
 #include <iostream>
 #include <boost/asio.hpp>

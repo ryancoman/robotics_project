@@ -1,14 +1,11 @@
-/*
- * To use this, you will need the boost libraries.
- * To install on a debian/ubuntu linux system, I used 'sudo apt install libboost-all-dev'
- */
 // serialstream.h from https://github.com/fedetft/serial-port/tree/master/6_stream
 #include "imu_publisher/serialstream.h"
 #include <ros/ros.h>
 #include <geometry_msgs/Quaternion.h>
-#include <boost/math/quaternion.hpp>
+#include <tf2/LinearMath/Quaternion.h>
+// To get the following header working: sudo apt install ros-melodic-tf2-geometry-msgs
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <cmath>
-#include <boost/math/constants/constants.hpp>
 #include <string>
 #include <iostream>
 
@@ -17,9 +14,7 @@
 /* Baud rate for the serial connection */
 #define BAUD_RATE 115200
 
-using namespace boost::math;
-
-quaternion<double> eulerToQuaternion(double x, double y, double z);
+double degToRad(double angle_degrees);
 
 int main(int argc, char **argv)
 {
@@ -63,13 +58,11 @@ int main(int argc, char **argv)
         str_stream >> z;
 
         // Convert to quaternion
-        quaternion<double> output = eulerToQuaternion(x, y, z);
+        tf2::Quaternion output;
+        output.setEuler(degToRad(x), degToRad(y), degToRad(z));
 
-        geometry_msgs::Quaternion msg;
-        msg.w = output.R_component_1();
-        msg.x = output.R_component_2();
-        msg.y = output.R_component_3();
-        msg.z = output.R_component_4();
+        // Now create the message and publish it
+        geometry_msgs::Quaternion msg = tf2::toMsg(output);
 
         pub.publish(msg);
     }
@@ -78,29 +71,9 @@ int main(int argc, char **argv)
 }
 
 /**
- * From wikipedia: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
- * Uses angles in degrees
+ * Convert angle from degrees to radians so it can be used with the setEuler funcction
  */
-quaternion<double> eulerToQuaternion(double x, double y, double z)
+double degToRad(double angle_degrees)
 {
-    // Convert all angles to radians first
-    x = x / 180 * double_constants::pi;
-    y = y / 180 * double_constants::pi;
-    z = z / 180 * double_constants::pi;
-
-    // Abbreviations for the various angular functions
-    double cx = cos(x * 0.5);
-    double sx = sin(x * 0.5);
-    double cy = cos(y * 0.5);
-    double sy = sin(y * 0.5);
-    double cz = cos(z * 0.5);
-    double sz = sin(z * 0.5);
-
-    double qw = cx * cy * cz + sx * sy * sz;
-    double qx = sx * cy * cz - cx * sy * sz;
-    double qy = cx * sy * cz + sx * cy * sz;
-    double qz = cx * cy * sz - sx * sy * cz;
-
-    quaternion<double> q(qw, qx, qy, qz);
-    return q;
+    return angle_degrees / 180 * M_PI;
 }

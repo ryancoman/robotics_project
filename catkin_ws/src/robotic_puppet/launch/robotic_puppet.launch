@@ -1,0 +1,9 @@
+<launch>
+    <!-- Start the imu_publisher_node -->
+    <node pkg="robotic_puppet" type="imu_publisher_node" name="imu_publisher_node" output="screen">
+    </node>
+
+    <!-- Start the process_data_node -->
+    <node pkg="robotic_puppet" type="process_data_node" name="process_data_node" output="screen">
+    </node>
+</launch>

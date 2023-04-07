@@ -1,5 +1,5 @@
 // serialstream.h from https://github.com/fedetft/serial-port/tree/master/6_stream
-#include "imu_publisher/serialstream.h"
+#include "robotic_puppet/serialstream.h"
 #include <ros/ros.h>
 #include <geometry_msgs/Quaternion.h>
 #include <tf2/LinearMath/Quaternion.h>

@@ -7,7 +7,7 @@
  * v1.00: First release.
  */
 
-#include "imu_publisher/serialstream.h"
+#include "robotic_puppet/serialstream.h"
 
 #include <iostream>
 #include <boost/asio.hpp>

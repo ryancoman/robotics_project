@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(imu_publisher)
+project(robotic_puppet)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -103,7 +103,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES imu_publisher
+#  LIBRARIES robotic_puppet
 #  CATKIN_DEPENDS geometry_msgs roscpp
 #  DEPENDS system_lib
 )
@@ -121,7 +121,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/imu_publisher.cpp
+#   src/${PROJECT_NAME}/robotic_puppet.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -132,9 +132,14 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/imu_publisher_node.cpp)
+
+# IMU Publisher
 add_executable(imu_publisher_node src/imu_publisher_node.cpp src/serialstream.cpp)
 target_link_libraries(imu_publisher_node ${catkin_LIBRARIES})
+
+# Data processing
+add_executable(process_data_node src/process_data_node.cpp)
+target_link_libraries(process_data_node ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -198,7 +203,7 @@ target_link_libraries(imu_publisher_node ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_imu_publisher.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_robotic_puppet.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

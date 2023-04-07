@@ -3,6 +3,7 @@
 #include <tf2/LinearMath/Quaternion.h>
 // To get the following header working: sudo apt install ros-melodic-tf2-geometry-msgs
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <geometry_msgs/Pose.h>
 
 void imuDataCallback(const geometry_msgs::Quaternion::ConstPtr &msg);
 void printQuat(tf2::Quaternion *quat);
@@ -42,7 +43,17 @@ void imuDataCallback(const geometry_msgs::Quaternion::ConstPtr &msg)
     new_rotation = quat_offset * new_rotation;
     current_calibrated_rotation = new_rotation;
 
-    printQuat(&current_calibrated_rotation);
+    // printQuat(&current_calibrated_rotation);
+    // publish to desired_arm_pose
+    ros::NodeHandle handle;
+    ros::Publisher pub = handle.advertise<geometry_msgs::Pose>("desired_arm_pose", 10);
+
+    geometry_msgs::Pose pose;
+    tf2::convert(current_calibrated_rotation, pose.orientation);
+    pose.position.x = 0.1;
+    pose.position.y = -0.6;
+    pose.position.z = 0.4;
+    pub.publish(pose);
 }
 
 /**

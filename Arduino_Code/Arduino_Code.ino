@@ -12,8 +12,8 @@
 
 //Conditional Compilation flags - can easily adjust the data that we want out
 #define SERIAL 1 // Needs to be 1 if you want the data to be printed out over a wired serial connection to be analyzed in the arduino serial monitor
-#define QUAT 0
-#define GYRO 1
+#define QUAT 1
+#define GYRO 0
 #define ACCEL 1
 
 BluetoothSerial SerialBT;
@@ -84,6 +84,7 @@ void setup() {
 
 
 void loop() {
+  // delay(2000); // 2 seconds
 #if QUAT // Send quaternion data
   int  mpuIntStatus = mpu.getIntStatus();
   fifoCount = mpu.getFIFOCount();

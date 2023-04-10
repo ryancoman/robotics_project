@@ -10,7 +10,7 @@
 #include <iostream>
 
 /* The serial port of the IMU device: this will probably change once on the actual computer */
-#define DEVICE "/dev/ttyUSB0"
+#define DEVICE "/dev/ttyUSB1"
 // #define DEVICE "/dev/ttyS1"
 /* Baud rate for the serial connection */
 #define BAUD_RATE 115200

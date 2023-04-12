@@ -1,0 +1,16 @@
+# Ignore the "build" and "devel" folder of the catkin_ws
+catkin_ws/build/
+catkin_ws/devel/
+
+# Ignore the ".catkin_workspace" file of the catkin_ws
+catkin_ws/.catkin_workspace
+
+# Ignore the auto-generated "CMakeLists.txt" of the catkin_ws
+catkin_ws/src/CMakeLists.txt
+
+# Ignore swp files and other typically unwanted files
+*.swp
+.DS_Store
+
+#Ignore VSCode stuff
+.vscode/

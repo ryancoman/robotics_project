@@ -12,8 +12,8 @@
 
 //Conditional Compilation flags - can easily adjust the data that we want out
 #define SERIAL 1 // Needs to be 1 if you want the data to be printed out over a wired serial connection to be analyzed in the arduino serial monitor
-#define QUAT 0
-#define GYRO 1
+#define QUAT 1
+#define GYRO 0
 #define ACCEL 1
 
 BluetoothSerial SerialBT;
@@ -68,6 +68,7 @@ void setup() {
   mpu.setXGyroOffset(54); //++
   mpu.setYGyroOffset(-21); //--
   mpu.setZGyroOffset(5);
+  mpu.setFullScaleAccelRange(MPU6050_ACCEL_FS_2);
 
   if (devStatus == 0) {
     mpu.setDMPEnabled(true);
@@ -83,6 +84,7 @@ void setup() {
 
 
 void loop() {
+  // delay(2000); // 2 seconds
 #if QUAT // Send quaternion data
   int  mpuIntStatus = mpu.getIntStatus();
   fifoCount = mpu.getFIFOCount();
@@ -120,7 +122,16 @@ void loop() {
   SendGyro(gx, gy, gz);
 #endif
 #if ACCEL // Send acceleration data
-  SendRealAccel(); // currently sending all 0s - need to figure that one out
+  double ax, ay, az;
+  getAcceleration(&ax, &ay, &az);
+  #if SERIAL
+    Serial.print(ax); Serial.print("/");
+    Serial.print(ay); Serial.print("/");
+    Serial.print(az); Serial.print("/");
+  #endif
+  SerialBT.print(ax); SerialBT.print("/");
+  SerialBT.print(ay); SerialBT.print("/");
+  SerialBT.print(az); SerialBT.print("/");
 #endif
 
 //Send a newline character before the next data set
@@ -171,18 +182,16 @@ void SendGyro(double gx, double gy, double gz){
   
 }
 
-void SendRealAccel() {
-  // display real acceleration, adjusted to remove gravity
-  mpu.dmpGetQuaternion(&q, fifoBuffer);
-  mpu.dmpGetAccel(&aa, fifoBuffer);
-  mpu.dmpGetGravity(&gravity, &q);
-  mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-  SerialBT.print(aa.x); SerialBT.print("/");
-  SerialBT.print(aa.y); SerialBT.print("/");
-  SerialBT.print(aa.z); SerialBT.print("/");
+void getAcceleration(double *ax, double *ay, double *az) {
+  int16_t accel_x;
+  int16_t accel_y;
+  int16_t accel_z;
+  mpu.getAcceleration(&accel_x, &accel_y, &accel_z);
+  double  scaling_factor = (double)4*9.81/(double)65535;
+  *ax = ((double) accel_x) * scaling_factor;
+  *ay = ((double) accel_y) * scaling_factor;
+  *az = ((double) accel_z) * scaling_factor; 
 }
-
-
 
 //Below here not currently used - old code from other projects but I want to leave for now in case we want to reference later
 void SendWorldAccel() {

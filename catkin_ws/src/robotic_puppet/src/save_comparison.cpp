@@ -8,19 +8,19 @@
 
 void comparisionCallback(const geometry_msgs::Quaternion::ConstPtr &msg);
 void printQuat(tf2::Quaternion *quat);
+using namespace std;
+ofstream outdata; // outdata is like cin
 
-static void closeAll(void)
+void closeAll(void)
 {
 	outdata.close();
 }
 
-static ofstream outdata; // outdata is like cin
-using namespace std;
+
+
 int main(int argc, char **argv)
 {
-		atexit(closeAll)
-    // Set the start_quat from euler angles (RPY)
-    start_quat.setEuler(180, 0, -30);
+		atexit(closeAll);
 
     // ROS Setup
     ros::init(argc, argv, "process_data");
@@ -46,7 +46,10 @@ int main(int argc, char **argv)
 */
 void comparisionCallback(const geometry_msgs::Quaternion::ConstPtr &msg)
 {
-  outdata << "Quaternion: (" << quat->getX() << ", " << quat->getY() << ", " << quat->getZ() << ", " << quat->getW() << ")" << std::endl;
+  tf2::Quaternion quat;
+  tf2::fromMsg(*msg, quat);
+  outdata << "Quaternion: (" << quat.getX() << ", " << quat.getY() << ", " << quat.getZ() << ", " << quat.getW() << ")" << std::endl;
+  //printQuat(&quat);
 }
 
 /**

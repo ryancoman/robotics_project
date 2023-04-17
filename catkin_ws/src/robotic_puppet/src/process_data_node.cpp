@@ -13,7 +13,6 @@ tf2::Quaternion current_rotation(0, 0, 0, 1);
 tf2::Quaternion current_calibrated_rotation(0, 0, 0, 1);
 tf2::Quaternion current_uncalibrated_rotation(0, 0, 0, 1);
 tf2::Quaternion last_calibrated_rotation;
-tf2::Quaternion start_quat;
 tf2::Quaternion rotation_quaternion;
 ros::Publisher pub;
 
@@ -22,8 +21,6 @@ using namespace std;
 int main(int argc, char **argv)
 {
 
-    // Set the start_quat from euler angles (RPY)
-    start_quat.setEuler(180, 0, -30);
 
     // ROS Setup
     ros::init(argc, argv, "process_data");

@@ -74,7 +74,7 @@ int main(int argc, char **argv)
         str_stream >> z;
 
         // Convert to quaternion
-        tf2::Quaternion output(x, y, z, w);
+        tf2::Quaternion output(x, y, z, w); 
         // output.setEuler(degToRad(x), degToRad(y), degToRad(z));
 
         // Now create the message and publish it

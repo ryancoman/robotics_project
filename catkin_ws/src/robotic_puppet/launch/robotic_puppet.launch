@@ -6,4 +6,17 @@
     <!-- Start the process_data_node -->
     <node pkg="robotic_puppet" type="process_data_node" name="process_data_node" output="screen">
     </node>
+
+    <!-- Start the process_data_node -->
+    <node pkg="robotic_puppet" type="feedback_publisher_node" name="feedback_publisher_node" output="screen">
+    </node>
+
+    <!-- Start the process_data_node -->
+    <node pkg="robotic_puppet" type="feedback_compare_node" name="feedback_compare_node" output="screen">
+    </node>
+
+     <!-- Start the process_data_node -->
+    <node pkg="robotic_puppet" type="save_comparison" name="save_comparison" output="screen">
+    </node>
+
 </launch>

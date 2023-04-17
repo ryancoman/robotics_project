@@ -141,6 +141,18 @@ target_link_libraries(imu_publisher_node ${catkin_LIBRARIES})
 add_executable(process_data_node src/process_data_node.cpp)
 target_link_libraries(process_data_node ${catkin_LIBRARIES})
 
+# feedback Publishing 
+add_executable(feedback_publisher_node src/feedback_publisher_node.cpp src/serialstream.cpp)
+target_link_libraries(feedback_publisher_node ${catkin_LIBRARIES})
+
+# Feedback processing
+add_executable(feedback_compare_node src/feedback_compare_node.cpp)
+target_link_libraries(feedback_compare_node ${catkin_LIBRARIES})
+
+# Feedback saving in excel
+add_executable(save_comparison src/save_comparison.cpp)
+target_link_libraries(save_comparison ${catkin_LIBRARIES})
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use

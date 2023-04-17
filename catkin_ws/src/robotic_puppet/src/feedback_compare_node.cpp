@@ -7,7 +7,7 @@
 
 
 void imuDataCallback(const geometry_msgs::Quaternion::ConstPtr &msg);
-void feedbackDataCallback(const const geometry_msgs::Quaternion::ConstPtr &msg);
+void feedbackDataCallback(const geometry_msgs::Quaternion::ConstPtr &msg);
 void printQuat(tf2::Quaternion *quat);
 
 tf2::Quaternion quat_offset(0.7071068, 0, 0, 0.7071068);
@@ -29,9 +29,6 @@ using namespace std;
 int main(int argc, char **argv)
 {
 
-    // Set the start_quat from euler angles (RPY)
-    start_quat.setEuler(180, 0, -30);
-
     // ROS Setup
     ros::init(argc, argv, "feedback_compare");
     ros::NodeHandle handle;
@@ -52,34 +49,43 @@ void imuDataCallback(const geometry_msgs::Quaternion::ConstPtr &msg)
     tf2::Quaternion new_rotation;
     tf2::fromMsg(*msg, new_rotation);
     current_uncalibrated_rotation_desired = new_rotation;
-    new_rotation = quat_offset * new_rotation;
+    //new_rotation = quat_offset * new_rotation;
     current_calibrated_rotation_desired = new_rotation;
 
 	if (saved_offset == false && saved_feedback == true) // this compares two of the first desired and feedback values to remove their fixed bias due to misalignment
 	{
 		saved_offset = true;
 		tf2::Quaternion desired_inverse_bias = current_calibrated_rotation_desired.inverse();
-		quat_bais = current_calibrated_rotation_feedback * desired_inverse_bias;
+		quat_bais = desired_inverse_bias * current_calibrated_rotation_feedback;
+    printQuat(&quat_bais);
+    printQuat(&current_calibrated_rotation_desired);
+    printQuat(&current_calibrated_rotation_feedback);
+    tf2::Quaternion should_be_feedback = current_calibrated_rotation_desired * quat_bais;
+    printQuat(&should_be_feedback); // this should be equal to the feedback (directly above)
 	}
 
 		//compare the two quaternions
 		tf2::Quaternion desired_inverse = current_calibrated_rotation_desired.inverse();
-		tf2::Quaternion rotation_between_quats = current_calibrated_rotation_feedback * desired_inverse;
-		rotation_between_quats = quat_bais * rotation_between_quats;
-		pub.publish(rotation_between_quats);
+    //printQuat(&desired_inverse);
+		tf2::Quaternion rotation_between_quats;
+    rotation_between_quats = desired_inverse * current_calibrated_rotation_feedback;
+		rotation_between_quats = quat_bais * rotation_between_quats; // account for the difference between the starting positions
     //printQuat(&rotation_between_quats);
 		
+    // Now create the message and publish it
+    geometry_msgs::Quaternion output = tf2::toMsg(rotation_between_quats);
 
-		
+    pub.publish(output);
+    //printQuat(&rotation_between_quats);
 
 }
 
-void feedbackDataCallback(const const geometry_msgs::Quaternion::ConstPtr &msg)
+void feedbackDataCallback(const geometry_msgs::Quaternion::ConstPtr &msg)
 {
 	tf2::Quaternion new_rotation;
   tf2::fromMsg(*msg, new_rotation);
   current_uncalibrated_rotation_feedback = new_rotation;
-  new_rotation = quat_offset * new_rotation;
+  //new_rotation = quat_offset * new_rotation;
   current_calibrated_rotation_feedback = new_rotation;
 	saved_feedback = true;
 

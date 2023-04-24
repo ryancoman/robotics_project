@@ -10,7 +10,7 @@
 #include <iostream>
 
 /* The serial port of the IMU device: this will probably change once on the actual computer */
-#define DEVICE "/dev/ttyUSB0"
+#define DEVICE "/dev/ttyUSB1"
 // #define DEVICE "/dev/ttyS1"
 /* Baud rate for the serial connection */
 #define BAUD_RATE 115200
@@ -19,11 +19,11 @@ double degToRad(double angle_degrees);
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "imu_publisher");
+    ros::init(argc, argv, "feedback_node_publisher");
 
     ros::NodeHandle handle;
 
-    ros::Publisher pub = handle.advertise<geometry_msgs::Quaternion>("imu_data", 10);
+    ros::Publisher pub = handle.advertise<geometry_msgs::Quaternion>("feedback_data", 10);
 
     // Set up serial input
     SerialOptions options;
@@ -38,10 +38,12 @@ int main(int argc, char **argv)
     do
     {
         getline(serial, line);
+        std::cout << line << std::endl;
     } while (std::count(line.begin(), line.end(), '/') != 8); // Format for proper line: dt/w/x/y/z/ax/ay/az/
-    std::cout << "Reading data imu" << std::endl;
+    std::cout << "Reading data feedback " << std::endl;
     while (ros::ok())
     {
+        std::cout << "feedback should be reading data now" << std::endl;
         // This will loop indefinitely as long as everything is ok
         // Get each line of the file, then convert Euler angles to Quaternion and publish
         if (!getline(serial, line))
@@ -74,11 +76,9 @@ int main(int argc, char **argv)
         str_stream >> z;
 
         // Convert to quaternion
-        tf2::Quaternion output(x, y, z, w); 
+        tf2::Quaternion output(x, y, z, w);
         // output.setEuler(degToRad(x), degToRad(y), degToRad(z));
 
-        //tf2::Quaternion quat_offset(0.7071068, 0, 0, 0.7071068);
-        //output = quat_offset * output;
         // Now create the message and publish it
         geometry_msgs::Quaternion msg = tf2::toMsg(output);
 

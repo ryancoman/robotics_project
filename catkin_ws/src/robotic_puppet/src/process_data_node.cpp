@@ -40,8 +40,7 @@ void imuDataCallback(const geometry_msgs::Quaternion::ConstPtr &msg)
     // Convert from the message quaternion to a useable type
     tf2::Quaternion new_rotation;
     tf2::fromMsg(*msg, new_rotation);
-    current_uncalibrated_rotation = new_rotation;
-    new_rotation = quat_offset * new_rotation;
+    //new_rotation = quat_offset * new_rotation;
     current_calibrated_rotation = new_rotation;
 
     // printQuat(&current_calibrated_rotation);
@@ -50,7 +49,7 @@ void imuDataCallback(const geometry_msgs::Quaternion::ConstPtr &msg)
     geometry_msgs::Pose pose;
     tf2::convert(current_calibrated_rotation, pose.orientation);
     pose.position.x = 0.1;
-    pose.position.y = -0.7;
+    pose.position.y = -0.6;
     pose.position.z = 0.4;
     pub.publish(pose);
 }

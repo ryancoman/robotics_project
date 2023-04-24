@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 
     ros::Subscriber sub = handle.subscribe("comparison", 1, comparisionCallback);
 		
-		outdata.open("Comparision_Quaterion.xlsx"); // opens the file
+		outdata.open("Comparision_Quaterion_actual0.xlsx"); // opens the file
    	if( !outdata ) { // file couldn't be opened
       cerr << "Error: file could not be opened" << endl;
       exit(1);

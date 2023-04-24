@@ -10,7 +10,7 @@
 #include <iostream>
 
 /* The serial port of the IMU device: this will probably change once on the actual computer */
-#define DEVICE "/dev/ttyUSB0"
+#define DEVICE "/dev/ttyUSB1"
 // #define DEVICE "/dev/ttyS1"
 /* Baud rate for the serial connection */
 #define BAUD_RATE 115200
@@ -38,10 +38,12 @@ int main(int argc, char **argv)
     do
     {
         getline(serial, line);
+        std::cout << line << std::endl;
     } while (std::count(line.begin(), line.end(), '/') != 8); // Format for proper line: dt/w/x/y/z/ax/ay/az/
-    std::cout << "Reading data" << std::endl;
+    std::cout << "Reading data feedback " << std::endl;
     while (ros::ok())
     {
+        std::cout << "feedback should be reading data now" << std::endl;
         // This will loop indefinitely as long as everything is ok
         // Get each line of the file, then convert Euler angles to Quaternion and publish
         if (!getline(serial, line))

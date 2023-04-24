@@ -10,7 +10,7 @@
 #include <iostream>
 
 /* The serial port of the IMU device: this will probably change once on the actual computer */
-#define DEVICE "/dev/ttyUSB1"
+#define DEVICE "/dev/ttyUSB0"
 // #define DEVICE "/dev/ttyS1"
 /* Baud rate for the serial connection */
 #define BAUD_RATE 115200
@@ -39,7 +39,7 @@ int main(int argc, char **argv)
     {
         getline(serial, line);
     } while (std::count(line.begin(), line.end(), '/') != 8); // Format for proper line: dt/w/x/y/z/ax/ay/az/
-    std::cout << "Reading data" << std::endl;
+    std::cout << "Reading data imu" << std::endl;
     while (ros::ok())
     {
         // This will loop indefinitely as long as everything is ok
@@ -77,6 +77,8 @@ int main(int argc, char **argv)
         tf2::Quaternion output(x, y, z, w); 
         // output.setEuler(degToRad(x), degToRad(y), degToRad(z));
 
+        //tf2::Quaternion quat_offset(0.7071068, 0, 0, 0.7071068);
+        //output = quat_offset * output;
         // Now create the message and publish it
         geometry_msgs::Quaternion msg = tf2::toMsg(output);
 
